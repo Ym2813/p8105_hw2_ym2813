@@ -77,3 +77,34 @@ pols_month_df =
   select(-c(day,prez_dem,prez_gop))
 ```
 
+read and clean the data in snp.csv
+
+```{r}
+snp_df = 
+  read_csv("data_hw2/fivethirtyeight_datasets/snp.csv") %>%
+  separate(date,c("month","day","year"),sep = "/") %>% 
+  mutate(year = as.numeric(year),
+         month = as.numeric(month),
+         year = case_when(year <= 15 ~ 2000+ year ,
+                          year > 15 ~ 1900+year)) %>% 
+  arrange(year,month) %>% 
+  mutate(
+     month = month.name[month],
+     year = as.character(year)) %>% 
+  select(year,month,everything()) 
+```
+
+Tidy the unemployment data set
+
+```{r}
+unemployment_df = 
+  read_csv("data_hw2/fivethirtyeight_datasets/unemployment.csv",
+           col_names = c("year", "1":"12"),skip = 1) %>%
+  pivot_longer(
+    "1":"12",
+    names_to = "month",
+    values_to = "percentage") %>% 
+  mutate(
+     month = month.name[as.numeric(month)],
+     year = as.character(year))
+```
