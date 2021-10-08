@@ -61,3 +61,19 @@ In the Mr. Trash Wheel data set, we have a total of `r nrow(trash_wheel_df)` obs
 In the data set for precipitation in 2018, we have a total of `r nrow(precipitation_2018_df)`observations, which lists out the month with precipitation and the total amount of precipitation within that month. 
 Similarly, we have a total of `r nrow(precipitation_2019_df)` observations in the 2019 precipitation data set, listing the month and the total amount of  precipitation. In the combined data set for precipitation in both 2018 and 2019, we have `r nrow(precipitation_both_df)` observations, which lists out all the month with precipitations in both 2018 and 2019; and also the total amount of precipitation in each month and year. The total precipitation in 2018 is `r precipitation_both_df %>% filter(year == 2018) %>% pull(total) %>% sum()`
 
+## Problem 2
+
+Read and clean the data in pols_month
+
+```{r}
+pols_month_df = 
+  read_csv("data_hw2/fivethirtyeight_datasets/pols-month.csv") %>% 
+  separate("mon",c("year","month","day"),sep = "-") %>% 
+  mutate(
+    month = month.name[as.numeric(month)],
+    president = case_when(prez_gop >= 1 ~ "gop",
+                          prez_dem == 1 ~ "dem")
+    ) %>% 
+  select(-c(day,prez_dem,prez_gop))
+```
+
