@@ -16,8 +16,8 @@ Read and clean the Mr.Trash Wheel sheet
 
 ```{r}
 trash_wheel_df = 
-  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2021-sept.xlsx", 
-             sheet = 1, col_names = TRUE, range = "A2:N574") %>% 
+  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+             sheet = 1, col_names = TRUE, range = "A2:N534") %>% 
   janitor::clean_names() %>%  #clean the variable names
   drop_na(dumpster) %>% #omitting rows without dumpster-specific data
   rename(weight = weight_tons,volume = volume_cubic_yards) %>% #reasonable variable name 
@@ -28,8 +28,8 @@ Read and clean precipitation data for 2018
 
 ```{r}
 precipitation_2018_df = 
-  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2021-sept.xlsx", 
-             sheet = 8, range = "A2:B15") %>% 
+  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+             sheet = 7, range = "A2:B15") %>% 
   janitor::clean_names() %>% 
   drop_na() %>% 
   mutate(year = "2018") %>% 
@@ -40,8 +40,8 @@ Read and clean precipitation data for 2019
 
 ```{r}
 precipitation_2019_df = 
-  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2021-sept.xlsx", 
-             sheet = 7, range = "A2:B15") %>% 
+  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+             sheet = 6, range = "A2:B15") %>% 
   janitor::clean_names() %>% 
   drop_na() %>% 
   mutate(year = "2019") %>% 
