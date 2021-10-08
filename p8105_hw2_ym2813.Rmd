@@ -24,4 +24,27 @@ trash_wheel_df =
   mutate(sports_balls = round(sports_balls,0)) #round sports_ball to integer
 ```
 
+Read and clean precipitation data for 2018 
+
+```{r}
+precipitation_2018_df = 
+  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2021-sept.xlsx", 
+             sheet = 8, range = "A2:B15") %>% 
+  janitor::clean_names() %>% 
+  drop_na() %>% 
+  mutate(year = "2018") %>% 
+  select(year,month,total)
+```
+
+Read and clean precipitation data for 2019
+
+```{r}
+precipitation_2019_df = 
+  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2021-sept.xlsx", 
+             sheet = 7, range = "A2:B15") %>% 
+  janitor::clean_names() %>% 
+  drop_na() %>% 
+  mutate(year = "2019") %>% 
+  select(year,month,total)
+```
 
