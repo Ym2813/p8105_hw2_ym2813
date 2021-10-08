@@ -12,9 +12,16 @@ library(readxl)
 
 ## Problem 1
 
+Read and clean the Mr.Trash Wheel sheet
+
 ```{r}
 trash_wheel_df = 
-  read_excel("data_hw2/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = 1, col_names = TRUE, range = "A2:N408") %>% 
-  janitor::clean_names()
+  read_excel("data_hw2/Trash-Wheel-Collection-Totals-7-2021-sept.xlsx", 
+             sheet = 1, col_names = TRUE, range = "A2:N408") %>% 
+  janitor::clean_names() %>%  #clean the variable names
+  drop_na(dumpster) %>% #omitting rows without dumpster-specific data
+  rename(weight = weight_tons,volume = volume_cubic_yards) %>% #reasonable variable name 
+  mutate(sports_balls = round(sports_balls,0)) #round sports_ball to integer
 ```
+
 
