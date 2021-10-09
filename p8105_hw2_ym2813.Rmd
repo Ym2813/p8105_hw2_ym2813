@@ -144,3 +144,15 @@ baby_names_df =
 ```
 
 The data set has `r nrow(baby_names_df)` observations and `r ncol(baby_names_df)` variables, including birth year, gender, ethnicity, name, count, and rank. 
+
+Table for the rank in popularity of the name “Olivia” as a female baby name over time
+
+```{r}
+olivia_df = baby_names_df %>% 
+  filter(gender == "female", name == "olivia") %>% 
+  select(-c(count,name,gender)) %>% 
+  pivot_wider(
+    names_from = "year",
+    values_from = "rank")
+knitr::kable(olivia_df, caption = "Rank of the Popularity of Olivia") 
+```
