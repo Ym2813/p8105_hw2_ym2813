@@ -59,7 +59,7 @@ precipitation_both_df =
 In the Mr. Trash Wheel data set, we have a total of `r nrow(trash_wheel_df)` observations, each representing a dumpster. The data set collects key information about Mr. Trash Wheel such as specific dumpster number, date, amount of trash they collected in weight and volume, types of trash they collected such as bottles, polystyrene, cigarette butts, and bags, and the homes they powered. The median number of sports balls in a dumpster in 2019 is `r trash_wheel_df %>% filter(year == 2019) %>% pull(sports_balls) %>% median()`. 
 
 In the data set for precipitation in 2018, we have a total of `r nrow(precipitation_2018_df)`observations, which lists out the month with precipitation and the total amount of precipitation within that month. 
-Similarly, we have a total of `r nrow(precipitation_2019_df)` observations in the 2019 precipitation data set, listing the month and the total amount of  precipitation. In the combined data set for precipitation in both 2018 and 2019, we have `r nrow(precipitation_both_df)` observations, which lists out all the month with precipitations in both 2018 and 2019; and also the total amount of precipitation in each month and year. The total precipitation in 2018 is `r precipitation_both_df %>% filter(year == 2018) %>% pull(total) %>% sum()`
+Similarly, we have a total of `r nrow(precipitation_2019_df)` observations in the 2019 precipitation data set, listing the month and the total amount of  precipitation. In the combined data set, we have `r nrow(precipitation_both_df)` observations, which lists out all the month with precipitations in both 2018 and 2019; and also the total amount of precipitation in each month and year. The total precipitation in 2018 is `r precipitation_both_df %>% filter(year == 2018) %>% pull(total) %>% sum()`
 
 ## Problem 2
 
@@ -118,8 +118,29 @@ combined_df =
 ```
 
 The pols-month data set has `r nrow(pols_month_df)` observations and `r ncol(pols_month_df)` variables. It contained the number of national politicians who are democratic or republican in the 68 years ranging from January 1947 and June 2015. Some of the key variables includes the party of the president on the associated date, the number of republican or democratic governors, senators,or representatives on the associated date.  
-The snp data set has `r nrow(snp_df)` observations and `r ncol(snp_df)`variables. It contained the Standard & Poor's stock market index in 65 years ranging between January 3rd 1950 to July 1st 2015. The key variables are date of observation, including year, month, and day, and the closing values of the S&P stock index on the observation date. 
+The snp data set has `r nrow(snp_df)` observations and `r ncol(snp_df)` variables. It contained the Standard & Poor's stock market index in 65 years ranging between January 3rd 1950 to July 1st 2015. The key variables are date of observation, including year, month, and day, and the closing values of the S&P stock index on the observation date. 
 
-The unemployment data set has `r nrow(unemployment_df)` observations and `r ncol(unemployment_df)`variables. It contained the information about the percentage of unemployment of each month between 1948 to 2015, a range of 67 years. The key variables are year, month, and the percentage of unemployment. 
+The unemployment data set has `r nrow(unemployment_df)` observations and `r ncol(unemployment_df)` variables. It contained the information about the percentage of unemployment of each month between 1948 to 2015, a range of 67 years. The key variables are year, month, and the percentage of unemployment. 
 
-The resulting data set is composed of the pols-month, snp, and unemployment data set. It has `r nrow(combined_df)` observations and `r ncol(combined_df)`variables. This is because we merged snp and unemployment into the pols-month data set, which will keep everything in the pols-month and merge the snp and unemployment data by year and month.The final data set contained the number of national politicians who are democratic or republican, the Standard & Poor's stock market index, and the unemployment percentage of each month in 68 years, ranging from January 1947 and June 2015.
+The resulting data set is composed of the pols-month, snp, and unemployment data set. It has `r nrow(combined_df)` observations and `r ncol(combined_df)` variables. This is because we merged snp and unemployment into the pols-month data set, which will keep everything in the pols-month and merge the snp and unemployment data by year and month.The final data set contained the number of national politicians who are democratic or republican, the Standard & Poor's stock market index, and the unemployment percentage of each month in 68 years, ranging from January 1947 and June 2015.
+
+## Problem 3
+
+Read and tidy the data
+
+```{r}
+baby_names_df = 
+  read_csv("data_hw2/Popular_Baby_Names.csv") %>% 
+  janitor::clean_names() %>% 
+  rename("year" = year_of_birth, "name" = childs_first_name) %>%
+  mutate(gender = str_to_lower(gender),
+         name = str_to_lower(name),
+         ethnicity = case_when(
+         str_detect(ethnicity,"ASIAN") ~ "asian and pacific islander",
+         str_detect(ethnicity,"BLACK") ~ "black non hispanic",
+         ethnicity == "HISPANIC"  ~ "hispanic",
+         str_detect(ethnicity,"WHITE") ~ "white non hispanic")) %>%
+  distinct() # remove duplicate rows
+```
+
+The data set has `r nrow(baby_names_df)` observations and `r ncol(baby_names_df)` variables, including birth year, gender, ethnicity, name, count, and rank. 
