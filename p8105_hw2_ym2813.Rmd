@@ -5,7 +5,7 @@ date: "10/4/2021"
 output: github_document
 ---
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 library(readxl)
 ```
@@ -22,6 +22,8 @@ trash_wheel_df =
   drop_na(dumpster) %>% #omitting rows without dumpster-specific data
   rename(weight = weight_tons,volume = volume_cubic_yards) %>% #reasonable variable name 
   mutate(sports_balls = round(sports_balls,0)) #round sports_ball to integer
+
+trash_wheel_df
 ```
 
 Read and clean precipitation data for 2018 
@@ -34,6 +36,8 @@ precipitation_2018_df =
   drop_na() %>% 
   mutate(year = "2018") %>% 
   select(year,month,total)
+
+precipitation_2018_df
 ```
 
 Read and clean precipitation data for 2019
@@ -46,6 +50,8 @@ precipitation_2019_df =
   drop_na() %>% 
   mutate(year = "2019") %>% 
   select(year,month,total)
+
+precipitation_2019_df
 ```
 
 Combine precipitation datasets and convert month to a character variable
@@ -54,18 +60,23 @@ Combine precipitation datasets and convert month to a character variable
 precipitation_both_df = 
   bind_rows(precipitation_2018_df, precipitation_2019_df) %>% 
   mutate(month = month.name[month])
+
+precipitation_both_df
 ```
 
-In the Mr. Trash Wheel data set, we have a total of `r nrow(trash_wheel_df)` observations, each representing a dumpster. The data set collects key information about Mr. Trash Wheel such as specific dumpster number, date, amount of trash they collected in weight and volume, types of trash they collected such as bottles, polystyrene, cigarette butts, and bags, and the homes they powered. The median number of sports balls in a dumpster in 2019 is `r trash_wheel_df %>% filter(year == 2019) %>% pull(sports_balls) %>% median()`. 
+In the Mr. Trash Wheel data set, we have a total of `r nrow(trash_wheel_df)` observations, each representing a dumpster. The data has `r ncol(trash_wheel_df)` variables, collecting key information about Mr. Trash Wheel such as specific dumpster number, date, amount of trash they collected in weight and volume, types of trash they collected such as bottles, polystyrene, cigarette butts, and bags, and the homes they powered. The median number of sports balls in a dumpster in 2019 is `r trash_wheel_df %>% filter(year == 2019) %>% pull(sports_balls) %>% median()`. 
 
-In the data set for precipitation in 2018, we have a total of `r nrow(precipitation_2018_df)`observations, which lists out the month with precipitation and the total amount of precipitation within that month. 
-Similarly, we have a total of `r nrow(precipitation_2019_df)` observations in the 2019 precipitation data set, listing the month and the total amount of  precipitation. In the combined data set, we have `r nrow(precipitation_both_df)` observations, which lists out all the month with precipitations in both 2018 and 2019; and also the total amount of precipitation in each month and year. The total precipitation in 2018 is `r precipitation_both_df %>% filter(year == 2018) %>% pull(total) %>% sum()`
+In the data set for precipitation in 2018, we have a total of `r nrow(precipitation_2018_df)`observations, and `r ncol(precipitation_2018_df)` variables, which lists out month and precipitation within that month. 
+
+Similarly, in the 2019 precipitation data set, we have a total of `r nrow(precipitation_2019_df)` observations and `r ncol(precipitation_2019_df)` variables that lists the month and  precipitation. 
+
+In the combined data set, we have `r nrow(precipitation_both_df)` observations, and `r ncol(precipitation_both_df)` variables listing out the month with precipitations in both 2018 and 2019; and also the total amount of precipitation in each month and year. The total precipitation in 2018 is `r precipitation_both_df %>% filter(year == 2018) %>% pull(total) %>% sum()`
 
 ## Problem 2
 
 Read and clean the data in pols_month
 
-```{r}
+```{r, message=FALSE}
 pols_month_df = 
   read_csv("data_hw2/fivethirtyeight_datasets/pols-month.csv") %>% 
   separate("mon",c("year","month","day"),sep = "-") %>% 
@@ -75,11 +86,13 @@ pols_month_df =
                           prez_dem == 1 ~ "dem")
     ) %>% 
   select(-c(day,prez_dem,prez_gop))
+
+pols_month_df
 ```
 
 read and clean the data in snp.csv
 
-```{r}
+```{r,message=FALSE}
 snp_df = 
   read_csv("data_hw2/fivethirtyeight_datasets/snp.csv") %>%
   separate(date,c("month","day","year"),sep = "/") %>% 
@@ -92,11 +105,13 @@ snp_df =
      month = month.name[month],
      year = as.character(year)) %>% 
   select(year,month,everything()) 
+
+snp_df
 ```
 
 Tidy the unemployment data set
 
-```{r}
+```{r,message=FALSE}
 unemployment_df = 
   read_csv("data_hw2/fivethirtyeight_datasets/unemployment.csv",
            col_names = c("year", "1":"12"),skip = 1) %>%
@@ -107,17 +122,22 @@ unemployment_df =
   mutate(
      month = month.name[as.numeric(month)],
      year = as.character(year))
+
+unemployment_df
 ```
 
 Join the data sets
 
-```{r}
+```{r,message=FALSE}
 combined_df = 
   left_join(pols_month_df, snp_df, by = c("year","month")) %>% 
   left_join(unemployment_df, by = c("year","month"))
+
+combined_df
 ```
 
-The pols-month data set has `r nrow(pols_month_df)` observations and `r ncol(pols_month_df)` variables. It contained the number of national politicians who are democratic or republican in the 68 years ranging from January 1947 and June 2015. Some of the key variables includes the party of the president on the associated date, the number of republican or democratic governors, senators,or representatives on the associated date.  
+The pols-month data set has `r nrow(pols_month_df)` observations and `r ncol(pols_month_df)` variables. It contained the number of national politicians who are democratic or republican in the 68 years ranging from January 1947 and June 2015. Some of the key variables includes the party of the president on the associated date, the number of republican or democratic governors, senators,or representatives on the associated date.
+
 The snp data set has `r nrow(snp_df)` observations and `r ncol(snp_df)` variables. It contained the Standard & Poor's stock market index in 65 years ranging between January 3rd 1950 to July 1st 2015. The key variables are date of observation, including year, month, and day, and the closing values of the S&P stock index on the observation date. 
 
 The unemployment data set has `r nrow(unemployment_df)` observations and `r ncol(unemployment_df)` variables. It contained the information about the percentage of unemployment of each month between 1948 to 2015, a range of 67 years. The key variables are year, month, and the percentage of unemployment. 
@@ -128,7 +148,7 @@ The resulting data set is composed of the pols-month, snp, and unemployment data
 
 Read and tidy the data
 
-```{r}
+```{r,message=FALSE}
 baby_names_df = 
   read_csv("data_hw2/Popular_Baby_Names.csv") %>% 
   janitor::clean_names() %>% 
@@ -141,6 +161,8 @@ baby_names_df =
          ethnicity == "HISPANIC"  ~ "hispanic",
          str_detect(ethnicity,"WHITE") ~ "white non hispanic")) %>%
   distinct() # remove duplicate rows
+
+baby_names_df
 ```
 
 The data set has `r nrow(baby_names_df)` observations and `r ncol(baby_names_df)` variables, including birth year, gender, ethnicity, name, count, and rank. 
