@@ -95,11 +95,11 @@ read and clean the data in snp.csv
 ```{r,message=FALSE}
 snp_df = 
   read_csv("data_hw2/fivethirtyeight_datasets/snp.csv") %>%
-  separate(date,c("month","day","year"),sep = "/") %>% 
+  mutate(date = lubridate::mdy(date)) %>%  #change to a date variable
+  separate(date,c("year","month","day"),sep = "-") %>% 
   mutate(year = as.numeric(year),
          month = as.numeric(month),
-         year = case_when(year <= 15 ~ 2000+ year ,
-                          year > 15 ~ 1900+year)) %>% 
+         year = ifelse(year > 2015, year - 100, year)) %>% 
   arrange(year,month) %>% 
   mutate(
      month = month.name[month],
